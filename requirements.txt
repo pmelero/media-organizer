@@ -1,0 +1,5 @@
+Pillow==10.3.0
+exifread==2.3.2
+pyheif==0.7.1
+ffmpeg-python==0.2.0
+tqdm==4.66.4
