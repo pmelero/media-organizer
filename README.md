@@ -62,6 +62,11 @@ This script organizes media files (images and videos) into directories based on 
    docker run --rm -v /path/to/your/source_folder:/app/source_folder media-organizer /app/source_folder
    ```
 
+   Example for external HD located in 'D:\Fotos\Iphone':
+   ```sh
+   docker run --rm -v /d/Fotos/Iphone:/app/source_folder media-organizer /app/source_folder
+   ```
+
 ### Without Docker
 
 1. Run the script directly:
