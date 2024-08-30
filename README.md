@@ -75,6 +75,13 @@ This script organizes media files (images and videos) into directories based on 
    python media_organizer.py /path/to/your/source_folder
    ```
 
+   If you are running WSL and want to use an external HD. First mount the volume using:
+   
+   ```sh
+   sudo mount -t drvfs D: /mnt/d
+   python3 media_organizer.py /mnt/d/Fotos/Iphone
+    ```
+
 ### Parameters
 
 - `source_folder`: Path to the folder containing media files to be organized.
