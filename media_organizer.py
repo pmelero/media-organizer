@@ -105,7 +105,7 @@ def get_date_taken(path, file, use_modification_date=False):
     If no date is found and use_modification_date is True, it will use the last modification date.
     """
     if os.path.exists(path):
-        if file.lower().endswith(('mp4', 'mov', 'avi')):
+        if file.lower().endswith(('mp4', 'mov', 'avi', 'm4v', '3gp')):
             date_taken = get_video_creation_date(path)
         else:
             exif_data = get_image_date_taken(path)
