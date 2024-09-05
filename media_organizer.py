@@ -88,7 +88,22 @@ def get_video_creation_date(path):
         print(f"Error reading video metadata from {path}: {e}")
     return None
 
-def get_date_taken(path, file):
+def get_file_modification_date(path):
+    """
+    Retrieves the last modification date of the file from the file system.
+    """
+    try:
+        mod_timestamp = os.path.getmtime(path)
+        return datetime.fromtimestamp(mod_timestamp)
+    except Exception as e:
+        print(f"Error getting modification date from {path}: {e}")
+    return None
+
+def get_date_taken(path, file, use_modification_date=False):
+    """
+    Tries to retrieve the date the media file was taken (from EXIF or video metadata).
+    If no date is found and use_modification_date is True, it will use the last modification date.
+    """
     if os.path.exists(path):
         if file.lower().endswith(('mp4', 'mov', 'avi')):
             date_taken = get_video_creation_date(path)
@@ -98,9 +113,14 @@ def get_date_taken(path, file):
                 date_taken = exif_data
             else:
                 date_taken = None
+
+        # If no EXIF data is found and the flag to use modification date is set
+        if not date_taken and use_modification_date:
+            date_taken = get_file_modification_date(path)
+            
     return date_taken
 
-def organize_files_by_date(source_folder):
+def organize_files_by_date(source_folder, use_modification_date=False):
     destination_folder = source_folder + '/_output'
     ensure_folder_exists(destination_folder)
     
@@ -122,8 +142,8 @@ def organize_files_by_date(source_folder):
     for root, file in tqdm(files_to_process, desc="Processing files", unit="file"):
         file_path = os.path.join(root, file)
         
-        # Try to get the date the photo or video was take                
-        date_taken = get_date_taken(file_path, file)
+        # Try to get the date the photo or video was taken
+        date_taken = get_date_taken(file_path, file, use_modification_date)
         
         if date_taken:
             year = date_taken.strftime('%Y')
@@ -136,7 +156,7 @@ def organize_files_by_date(source_folder):
             dest_path = os.path.join(dest_dir, file)            
             
             if os.path.exists(dest_path):         
-                dest_date_taken = get_date_taken(dest_path, file) 
+                dest_date_taken = get_date_taken(dest_path, file, use_modification_date)
                 if date_taken and date_taken != dest_date_taken:
                     new_file_name = f"{os.path.splitext(file)[0]}_1{os.path.splitext(file)[1]}"
                     dest_path = os.path.join(dest_dir, new_file_name)
@@ -207,7 +227,9 @@ def ensure_folder_exists(folder):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Organize media files by date.")
     parser.add_argument("source_folder", help="Path to the source folder containing media files.")
+    parser.add_argument("--use-modification-date", action="store_true", 
+                        help="Use file modification date if no EXIF or metadata date is found.")
     args = parser.parse_args()
 
-    organize_files_by_date(args.source_folder)
+    organize_files_by_date(args.source_folder, use_modification_date=args.use_modification_date)
     ios_move_files_to_destination(args.source_folder)
