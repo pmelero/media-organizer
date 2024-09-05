@@ -105,7 +105,7 @@ def get_date_taken(path, file, use_modification_date=False):
     If no date is found and use_modification_date is True, it will use the last modification date.
     """
     if os.path.exists(path):
-        if file.lower().endswith(('mp4', 'mov', 'avi')):
+        if file.lower().endswith(('mp4', 'mov', 'avi', 'm4v', '3gp')):
             date_taken = get_video_creation_date(path)
         else:
             exif_data = get_image_date_taken(path)
@@ -216,7 +216,7 @@ def get_files_to_process(source_folder):
         if '_output' in root:
             continue
         for file in files:
-            if file.lower().endswith(('jpg', 'jpeg', 'png', 'heic', 'heif', 'dng', 'mp4', 'mov', 'avi')):
+            if file.lower().endswith(('jpg', 'jpeg', 'png', 'heic', 'heif', 'dng', 'mp4', 'mov', 'avi', 'm4v', '3gp')):
                 files_to_process.append((root, file))
     return files_to_process
 
