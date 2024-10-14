@@ -216,7 +216,7 @@ def get_files_to_process(source_folder):
         if '_output' in root:
             continue
         for file in files:
-            if file.lower().endswith(('jpg', 'jpeg', 'png', 'heic', 'heif', 'dng', 'mp4', 'mov', 'avi')):
+            if file.lower().endswith(('jpg', 'jpeg', 'png', 'heic', 'heif', 'dng', 'mp4', 'mov', 'avi', 'm4v', '3gp')):
                 files_to_process.append((root, file))
     return files_to_process
 
